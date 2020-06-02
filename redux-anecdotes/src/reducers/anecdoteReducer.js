@@ -1,3 +1,5 @@
+import { combineReducers } from 'redux';
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -17,9 +19,9 @@ const asObject = (anecdote) => {
   };
 };
 
-const initialState = anecdotesAtStart.map(asObject);
+const initialStateAnecdotes = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
+const anecdoteReducer = (state = initialStateAnecdotes, action) => {
   console.log('state now: ', state);
   console.log('action', action);
   switch (action.type) {
@@ -34,6 +36,36 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+const notificationReducer = (state = null, action) => {
+  console.log('state now: ', state);
+  console.log('action', action);
+  switch (action.type) {
+    case 'SET_NOTIFICATION':
+      return action.notification;
+    case 'CLEAR_NOTIFICATION':
+      return null;
+    default:
+      return state;
+  }
+};
+
+const filterReducer = (state = '', action) => {
+  console.log('state now: ', state);
+  console.log('action', action);
+  switch (action.type) {
+    case 'SET_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+};
+
+const reducer = combineReducers({
+  anecdotes: anecdoteReducer,
+  notification: notificationReducer,
+  filter: filterReducer,
+});
+
 export const voteForAnecdote = (id) => {
   return {
     type: 'VOTE',
@@ -45,6 +77,26 @@ export const addAnecdote = (anecdote) => {
   return {
     type: 'ADD',
     data: anecdote,
+  };
+};
+
+export const setNotification = (notification) => {
+  return {
+    type: 'SET_NOTIFICATION',
+    notification: notification,
+  };
+};
+
+export const clearNotification = (notification) => {
+  return {
+    type: 'CLEAR_NOTIFICATION',
+  };
+};
+
+export const setFilter = (filter) => {
+  return {
+    type: 'SET_FILTER',
+    filter: filter,
   };
 };
 
