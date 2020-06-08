@@ -1,20 +1,14 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { voteForAnecdote } from '../reducers/anecdoteReducer.js';
-const AnecdoteList = () => {
-  const dispatch = useDispatch();
-
+const AnecdoteList = (props) => {
   const vote = (anecdote) => {
-    dispatch(voteForAnecdote(anecdote));
+    props.voteForAnecdote(anecdote);
   };
-  const anecdotes = useSelector((state) => {
-    return state.filter
-      ? state.anecdotes.filter((an) => an.content.includes(state.filter)) || []
-      : state.anecdotes;
-  });
-  return !anecdotes || anecdotes.length === 0
+
+  return !props.anecdotes || props.anecdotes.length === 0
     ? null
-    : anecdotes
+    : props.anecdotes
         .sort((one, two) => two.votes - one.votes)
         .map((anecdote) => (
           <div key={anecdote.id}>
@@ -26,4 +20,17 @@ const AnecdoteList = () => {
           </div>
         ));
 };
-export default AnecdoteList;
+
+const mapStateToProps = (state) => {
+  return {
+    anecdotes: state.filter
+      ? state.anecdotes.filter((an) => an.content.includes(state.filter)) || []
+      : state.anecdotes,
+  };
+};
+
+const mapDispatchToProps = {
+  voteForAnecdote,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);

@@ -1,22 +1,30 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { setFilter } from '../reducers/anecdoteReducer.js';
 
-const Filter = () => {
-  const dispatch = useDispatch();
-  const filter = useSelector((state) => {
-    return state.filter;
-  });
+const Filter = (props) => {
   const onFilterChange = (event) => {
-    dispatch(setFilter(event.target.value));
+    props.setFilter(event.target.value);
   };
 
   return (
     <div>
       filter{' '}
-      <input id="filter" type="text" onChange={onFilterChange} value={filter} />
+      <input
+        id="filter"
+        type="text"
+        onChange={onFilterChange}
+        value={props.filter}
+      />
     </div>
   );
 };
+const mapStateToProps = (state) => {
+  return { filter: state.filter };
+};
 
-export default Filter;
+const mapDispatchToProps = {
+  setFilter,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);
